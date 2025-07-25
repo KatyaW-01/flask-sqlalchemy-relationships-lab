@@ -19,7 +19,7 @@ class Event(db.Model):
     name = db.Column(db.String, nullable=False)
     location = db.Column(db.String, nullable=False)
 
-    sessions = db.relationship('Session', back_populates = 'event', cascade = 'all, delete-orphan')
+    sessions = db.relationship('Session', back_populates='event', cascade='all, delete-orphan')
 
     def __repr__(self):
         return f'<Event {self.id}, {self.name}, {self.location}>'
@@ -32,7 +32,7 @@ class Session(db.Model):
     start_time = db.Column(db.DateTime)
 
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
-    event = db.relationship('Event', back_populates = 'sessions')
+    event = db.relationship('Event', back_populates='sessions')
 
 
     def __repr__(self):
@@ -45,6 +45,8 @@ class Speaker(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
 
+    bio = db.relationship('Bio', uselist=False, back_populates='speaker', cascade='all, delete-orphan' )
+
     def __repr__(self):
         return f'<Speaker {self.id}, {self.name}>'
 
@@ -55,6 +57,7 @@ class Bio(db.Model):
     bio_text = db.Column(db.Text, nullable=False)
 
     speaker_id = db.Column(db.Integer, db.ForeignKey('speakers.id'))
+    speaker = db.relationship('Speaker', back_populates = 'bio')
 
     def __repr__(self):
         return f'<Bio {self.id}, {self.bio_text}>'
