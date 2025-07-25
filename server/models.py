@@ -9,7 +9,7 @@ metadata = MetaData(naming_convention={
 db = SQLAlchemy(metadata=metadata)
 
 # TODO: add association table
-session_speakers = db.table(
+session_speakers = db.Table(
     'sessions_speakers',
     metadata,
     db.Column('session_id', db.Integer, db.ForeignKey('sessions.id'), primary_key = True),
