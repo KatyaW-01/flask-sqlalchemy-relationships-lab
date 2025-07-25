@@ -28,7 +28,7 @@ class Session(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
     start_time = db.Column(db.DateTime)
-    event_id = db.Column(db.Integer)
+    event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
 
 
     def __repr__(self):
@@ -42,14 +42,14 @@ class Speaker(db.Model):
     name = db.Column(db.String, nullable=False)
 
     def __repr__(self):
-        return f'<Speaker {id}, {name}>'
+        return f'<Speaker {self.id}, {self.name}>'
 
 class Bio(db.Model):
     __tablename__ = 'bios'
 
     id = db.Column(db.Integer, primary_key=True)
     bio_text = db.Column(db.Text, nullable=False)
-    speaker_id = db.Column(db.Integer)
+    speaker_id = db.Column(db.Integer, db.ForeignKey('speakers.id'))
 
     def __repr__(self):
-        return f'<Bio {id}, {bio_text}>'
+        return f'<Bio {self.id}, {self.bio_text}>'
