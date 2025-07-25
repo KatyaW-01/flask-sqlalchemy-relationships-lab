@@ -9,7 +9,12 @@ metadata = MetaData(naming_convention={
 db = SQLAlchemy(metadata=metadata)
 
 # TODO: add association table
-
+session_speakers = db.table(
+    'sessions_speakers',
+    metadata,
+    db.Column('session_id', db.Integer, db.ForeignKey('sessions.id'), primary_key = True),
+    db.Column('speaker_id', db.Integer, db.ForeignKey('speakers.id'), primary_key = True)
+)
 
 # TODO: set up relationships for all models
 class Event(db.Model):
@@ -33,6 +38,7 @@ class Session(db.Model):
 
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
     event = db.relationship('Event', back_populates='sessions')
+    speakers = db.relationship('Speaker', secondary = session_speakers, back_populates = 'sessions')
 
 
     def __repr__(self):
@@ -46,6 +52,7 @@ class Speaker(db.Model):
     name = db.Column(db.String, nullable=False)
 
     bio = db.relationship('Bio', uselist=False, back_populates='speaker', cascade='all, delete-orphan' )
+    sessions = db.relationship('Session', secondary = session_speakers, back_populates = 'speakers')
 
     def __repr__(self):
         return f'<Speaker {self.id}, {self.name}>'
