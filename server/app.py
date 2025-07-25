@@ -82,7 +82,27 @@ def get_speaker(id):
 
 @app.route('/sessions/<int:id>/speakers')
 def get_session_speakers(id):
-    pass
+    session = Session.query.filter_by(id=id).first()
+    speakers = []
+    if session:
+        for speaker in session.speakers:
+            if speaker:
+                if speaker.bio:
+                    speaker_bio = speaker.bio.bio_text
+                else:
+                    speaker_bio = "No bio available"
+                speaker_dict = {
+                    "id": speaker.id,
+                    "name": speaker.name,
+                    "bio_text": speaker_bio
+                }
+                speakers.append(speaker_dict)
+        body = speakers
+        status = 200
+    else:
+        body = {"error": "Session not found"}
+        status = 404
+    return make_response(body,status)
 
 
 if __name__ == '__main__':
