@@ -24,15 +24,12 @@ def get_events():
             "id": event.id,
             "location": event.location,
             "name": event.name
-            
         }
         events.append(event_dict)
     
     body = events
     status = 200
     return make_response(body, status)
-        
-
 
 @app.route('/events/<int:id>/sessions')
 def get_event_sessions(id):
@@ -49,21 +46,38 @@ def get_event_sessions(id):
         body = sessions
         status = 200
     else:
-        body = {'message': f'Event {id} not found'}
+        body = {'error': 'Event not found'}
         status = 404
 
     return make_response(body, status)
 
-
-
 @app.route('/speakers')
 def get_speakers():
-    pass
+    speakers = Speaker.query.all()
+    speakers_list = [{'id': speaker.id, "name": speaker.name} for speaker in speakers]
+    body = speakers_list
+    status = 200
+    return make_response(body, status)
 
 
 @app.route('/speakers/<int:id>')
 def get_speaker(id):
-    pass
+    speaker = Speaker.query.filter_by(id=id).first()
+    if speaker:
+        if speaker.bio:
+            speaker_bio = speaker.bio.bio_text
+        else:
+            speaker_bio = "No bio available"
+        body = {
+            "id": speaker.id,
+            "name": speaker.name,
+            "bio_text": speaker_bio
+        }
+        status = 200
+    else:
+        body = {"error": "Speaker not found"}
+        status = 404
+    return make_response(body, status)
 
 
 @app.route('/sessions/<int:id>/speakers')
